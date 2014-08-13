@@ -1,19 +1,19 @@
-#include <asp/slic.hpp>
+#include <asp/algos.hpp>
 #include <asp/aslic.hpp>
 
 namespace asp
 {
 
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_input)
+	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb)
 	{
 		constexpr unsigned NUM_SUPERPIXELS = 1000;
 		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::FloydSteinbergExpo;
 		constexpr float COMPACTNESS = 0.1f;
 
-		float density = static_cast<float>(NUM_SUPERPIXELS) / (img_input.width() * img_input.height());
-		auto img_data = asp::Convert(img_input,
+		float density = static_cast<float>(NUM_SUPERPIXELS) / (img_rgb.width() * img_rgb.height());
+		auto img_data = Convert(img_rgb,
 			[density](unsigned x, unsigned y, const slimage::Pixel3ub& px) {
-				return asp::Pixel<asp::PixelRgb>{
+				return Pixel<PixelRgb>{
 					1.0f,
 					{
 						static_cast<float>(x),
@@ -30,9 +30,9 @@ namespace asp
 				};
 			});
 
-		auto sp = asp::ASLIC(img_data,
-			asp::ComputeSeeds(PDS_METHOD, img_data),
-			[](const asp::Superpixel<asp::PixelRgb>& a, const asp::Pixel<asp::PixelRgb>& b) {
+		auto sp = ASLIC(img_data,
+			ComputeSeeds(PDS_METHOD, img_data),
+			[](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
 				return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)
 					+ (1.0f - COMPACTNESS) * (a.data.color - b.data.color).squaredNorm();
 			});

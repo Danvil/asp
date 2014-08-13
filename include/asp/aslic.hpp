@@ -12,6 +12,7 @@ namespace asp {
 
 namespace detail
 {
+	inline
 	std::tuple<int,int> GetRange(int a, int b, float x, float w)
 	{
 		return std::make_tuple(

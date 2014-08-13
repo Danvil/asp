@@ -1,6 +1,7 @@
 add_library(libasp SHARED
 	asp.cpp
-	slic.cpp
+	algos/DASP.cpp
+	algos/SLIC.cpp
 	pds/pds.cpp
 	pds/FloydSteinberg.cpp
 )
