@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 		});
 
 	auto sp = asp::ASLIC(img_data,
-		asp::ComputeSeeds(img_data),
+		asp::ComputeSeeds(img_data, asp::PoissonDiskSamplingMethod::FloydSteinbergExpo),
 		[](const asp::Superpixel<asp::PixelRgb>& a, const asp::Pixel<asp::PixelRgb>& b) {
 			constexpr float COMPACTNESS = 0.1f;
 			return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)

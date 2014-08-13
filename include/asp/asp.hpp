@@ -1,6 +1,6 @@
 #pragma once
 
-#include <asp/FloydSteinberg.hpp>
+#include <asp/pds.hpp>
 #include <Eigen/Dense>
 #include <Slimage/Slimage.hpp>
 #include <vector>
@@ -152,7 +152,7 @@ struct Seed
 
 /** Compute seeds accordingly to pixel density values */
 template<typename T>
-std::vector<Seed> ComputeSeeds(const Image<Pixel<T>>& input)
+std::vector<Seed> ComputeSeeds(const Image<Pixel<T>>& input, PoissonDiskSamplingMethod method)
 {
 	const unsigned width = input.width();
 	const unsigned height = input.height();
@@ -162,7 +162,7 @@ std::vector<Seed> ComputeSeeds(const Image<Pixel<T>>& input)
 			density(x,y) = ((Pixel<T>&)input(x,y)).density;
 		}
 	}
-	std::vector<Eigen::Vector2f> pntseeds = FloydSteinbergExpo(density);
+	std::vector<Eigen::Vector2f> pntseeds = PoissonDiskSampling(method, density);
 	std::vector<Seed> seeds(pntseeds.size());
 	for(unsigned i=0; i<pntseeds.size(); i++) {
 		auto& sp = seeds[i];

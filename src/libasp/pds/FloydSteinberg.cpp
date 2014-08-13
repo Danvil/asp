@@ -1,5 +1,5 @@
-
-#include <asp/FloydSteinberg.hpp>
+#include <Eigen/Dense>
+#include <vector>
 
 namespace asp
 {

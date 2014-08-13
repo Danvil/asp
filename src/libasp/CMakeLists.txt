@@ -1,6 +1,7 @@
 add_library(libasp SHARED
 	asp.cpp
-	FloydSteinberg.cpp
+	pds/pds.cpp
+	pds/FloydSteinberg.cpp
 )
 
 set_target_properties(libasp PROPERTIES OUTPUT_NAME asp)
