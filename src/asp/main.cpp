@@ -1,4 +1,5 @@
-#include <asp/asp.hpp>
+#include <asp/slic.hpp>
+#include <asp/plot.hpp>
 #include <Slimage/IO.hpp>
 #include <Slimage/Slimage.hpp>
 #include <Slimage/Gui.hpp>
@@ -29,36 +30,10 @@ int main(int argc, char** argv)
 	slimage::Image3ub img_input = slimage::Load3ub(p_img);
 	slimage::gui::Show("input", img_input, 3);
 
-	float density = 1000.0f / (img_input.width() * img_input.height());
-	auto img_data = asp::Convert(img_input,
-		[density](unsigned x, unsigned y, const slimage::Pixel3ub& px) {
-			return asp::Pixel<asp::PixelRgb>{
-				1.0f,
-				{
-					static_cast<float>(x),
-					static_cast<float>(y)
-				},
-				density,
-				{
-					Eigen::Vector3f{
-						static_cast<float>(px[0]),
-						static_cast<float>(px[1]),
-						static_cast<float>(px[2])
-					}/255.0f
-				}
-			};
-		});
+	auto sp = asp::SLIC(img_input);
 
-	auto sp = asp::ASLIC(img_data,
-		asp::ComputeSeeds(img_data, asp::PoissonDiskSamplingMethod::FloydSteinbergExpo),
-		[](const asp::Superpixel<asp::PixelRgb>& a, const asp::Pixel<asp::PixelRgb>& b) {
-			constexpr float COMPACTNESS = 0.1f;
-			return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)
-				+ (1.0f - COMPACTNESS) * (a.data.color - b.data.color).squaredNorm();
-		});
-
-	slimage::Image3ub img_asp = asp::plot::Plot(sp)
-		<< asp::plot::Dense(
+	slimage::Image3ub img_asp = asp::Plot(sp)
+		<< asp::PlotDense(
 			[](const asp::Pixel<asp::PixelRgb>& u) {
 				return slimage::Pixel3ub{
 					static_cast<unsigned char>(255.0f*u.data.color[0]),
@@ -66,7 +41,7 @@ int main(int argc, char** argv)
 					static_cast<unsigned char>(255.0f*u.data.color[2])
 				};
 			})
-		<< asp::plot::Border();
+		<< asp::PlotBorder();
 	slimage::gui::Show("asp", img_asp, 3);
 
 	slimage::gui::WaitForKeypress();
