@@ -1,7 +1,8 @@
 #pragma once
 
 #include <asp/Segmentation.hpp>
-#include <Slimage/Slimage.hpp>
+#include <slimage/image.hpp>
+#include <slimage/types.hpp>
 #include <Eigen/Dense>
 
 namespace asp

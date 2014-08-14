@@ -1,8 +1,8 @@
 #include <asp/algos.hpp>
 #include <asp/plot.hpp>
-#include <Slimage/IO.hpp>
-#include <Slimage/Slimage.hpp>
-#include <Slimage/Gui.hpp>
+#include <slimage/opencv.hpp>
+#include <slimage/io.hpp>
+#include <slimage/gui.hpp>
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <boost/progress.hpp>
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	}
 
 	slimage::Image3ub img_input = slimage::Load3ub(p_img_rgb);
-	slimage::gui::Show("input", img_input, 3);
+	slimage::GuiShow("input", img_input);
 
 	// {
 	// 	auto sp = asp::SLIC(img_input);
@@ -63,10 +63,10 @@ int main(int argc, char** argv)
 					};
 				})
 			<< asp::PlotBorder();
-		slimage::gui::Show("dasp", img_dasp, 3);
+		slimage::GuiShow("dasp", img_dasp);
 	}
 
-	slimage::gui::WaitForKeypress();
+	slimage::GuiWait();
 
 	return 0;
 }

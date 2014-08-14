@@ -24,8 +24,8 @@ namespace asp
 		Image<Pixel<PixelRgbd>> img_data{width, height};
 		for(unsigned y=0, i=0; y<height; y++) {
 			for(unsigned x=0; x<width; x++, i++) {
-				const slimage::Pixel3ub& rgb = img_rgb(x,y);
-				uint16_t idepth = img_d(x,y);
+				const auto& rgb = img_rgb(x,y);
+				auto idepth = img_d(x,y);
 				float depth = static_cast<float>(idepth) * DEPTH_SCL;
 				Pixel<PixelRgbd>& q = img_data(x,y);
 				q.num = (idepth == 0) ? 0.0f : 1.0f;

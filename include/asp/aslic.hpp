@@ -38,7 +38,7 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 		const Seed& seed = seeds[i];
 		auto& sp = s.superpixels[i];
 		reinterpret_cast<SegmentBase<T>&>(sp) = reinterpret_cast<const SegmentBase<T>&>(
-			(Pixel<T>&)input(std::floor(seed.position.x()), std::floor(seed.position.y())));
+			input(std::floor(seed.position.x()), std::floor(seed.position.y())));
 		sp.num = 1.0f;
 		sp.position = seed.position;
 		sp.density = seed.density;
@@ -49,8 +49,8 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 	// iterate
 	for(unsigned k=0; k<ITERATIONS; k++) {
 		// reset weights
-		s.indices.fill(-1);
-		s.weights.fill(std::numeric_limits<float>::max());
+		std::fill(s.indices.begin(), s.indices.end(), -1);
+		std::fill(s.weights.begin(), s.weights.end(), std::numeric_limits<float>::max());
 		// iterate over all superpixels
 		for(size_t sid=0; sid<s.superpixels.size(); sid++) {
 			const sp_t& sp = s.superpixels[sid];
@@ -61,7 +61,11 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 			// iterate over superpixel bounding box
 			for(int y=y1; y<y2; y++) {
 				for(int x=x1; x<x2; x++) {
-					float d = dist(sp, input(x,y));
+					const auto& val = input(x,y);
+					if(!val.valid()) {
+						continue;
+					}
+					float d = dist(sp, val);
 					if(d < s.weights(x,y)) {
 						s.weights(x,y) = d;
 						s.indices(x,y) = sid;

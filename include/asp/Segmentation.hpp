@@ -15,6 +15,9 @@ struct SegmentBase
 	float density;
 	T data;
 
+	bool valid() const
+	{ return num > 0.0f; }
+
 	static SegmentBase Zero()
 	{ return {
 		0.0f,
