@@ -98,7 +98,7 @@ namespace asp
 	{ return slimage::Pixel3ub{sf32_to_ui08(x[0]), sf32_to_ui08(x[1]), sf32_to_ui08(x[2])}; }
 
 	template<typename T>
-	slimage::Image3ub PlotColor(const Segmentation<T>& seg)
+	slimage::Image3ub VisualizeSuperpixelColor(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
 			<< PlotDense([](const Pixel<T>& u) { return uf32_to_ui08(u.data.color); })
@@ -106,10 +106,10 @@ namespace asp
 	}
 
 	template<typename T>
-	slimage::Image3ub PlotNormals(const Segmentation<T>& seg)
+	slimage::Image3ub VisualizeSuperpixelNormal(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
-			<< PlotDense([](const Pixel<T>& u) { return sf32_to_ui08(u.data.color); })
+			<< PlotDense([](const Pixel<T>& u) { return sf32_to_ui08(u.data.normal); })
 			<< PlotBorder();
 	}
 

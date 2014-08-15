@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		// compute superpixels
 		auto sp = asp::SLIC(img_color);
 		// visualize superpixels
-		slimage::GuiShow("slic", PlotColor(sp));
+		slimage::GuiShow("slic", VisualizeSuperpixelColor(sp));
 		slimage::GuiWait();
 	}
 	else if(p_method == "DASP") {
@@ -61,7 +61,8 @@ int main(int argc, char** argv)
 		slimage::GuiShow("normals",
 			slimage::Convert(sp.input,
 				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::sf32_to_ui08(px.data.normal); }));
-		slimage::GuiShow("dasp", PlotColor(sp));
+		slimage::GuiShow("dasp (color)", VisualizeSuperpixelColor(sp));
+		slimage::GuiShow("dasp (normal)", VisualizeSuperpixelNormal(sp));
 		slimage::GuiWait();
 	}
 	else {
