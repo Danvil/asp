@@ -3,6 +3,7 @@
 #include <slimage/opencv.hpp>
 #include <slimage/io.hpp>
 #include <slimage/gui.hpp>
+#include <slimage/algorithm.hpp>
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <boost/progress.hpp>
@@ -57,6 +58,15 @@ int main(int argc, char** argv)
 		// compute superpixels
 		auto sp = asp::DASP(img_color, img_depth);
 		// visualize superpixels
+		slimage::GuiShow("normals",
+			slimage::Convert(sp.input,
+				[](const asp::Pixel<asp::PixelRgbd>& px) {
+					return slimage::Pixel3ub{
+						asp::sf32_to_ui08(px.data.normal[0]),
+						asp::sf32_to_ui08(px.data.normal[1]),
+						asp::sf32_to_ui08(px.data.normal[2])
+					};
+				}));
 		slimage::GuiShow("dasp", PlotColor(sp));
 		slimage::GuiWait();
 	}

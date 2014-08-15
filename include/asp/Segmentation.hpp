@@ -56,11 +56,6 @@ struct Superpixel
 	float radius;
 };
 
-/** Compute superpixel radius from density */
-inline
-float DensityToRadius(float density)
-{ return std::sqrt(1.0f / (density*3.1415f)); } // rho = 1 / (r*r*pi) => r = sqrt(rho/pi)
-
 /** Accumulate pixels */
 template<typename T>
 struct SegmentAccumulator
@@ -94,6 +89,7 @@ template<typename T>
 struct Segmentation
 {
 	using sp_t = Superpixel<T>;
+	Image<Pixel<T>> input;
 	std::vector<sp_t> superpixels;
 	Image<int> indices;
 	Image<float> weights;

@@ -22,6 +22,11 @@ namespace detail
 	}
 }
 
+/** Compute superpixel radius from density */
+inline
+float DensityToRadius(float density)
+{ return std::sqrt(1.0f / (density*3.1415f)); } // rho = 1 / (r*r*pi) => r = sqrt(rho/pi)
+
 /** Adaptive SLIC superpixel algorithm */
 template<typename T, typename F>
 Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& seeds, F dist)
@@ -33,6 +38,7 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 	// initialize
 	using sp_t = typename Segmentation<T>::sp_t;
 	Segmentation<T> s;
+	s.input = input;
 	s.superpixels.resize(seeds.size());
 	for(size_t i=0; i<seeds.size(); i++) {
 		const Seed& seed = seeds[i];
