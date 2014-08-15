@@ -47,12 +47,6 @@ namespace asp
 				q.data.color = Eigen::Vector3f{ static_cast<float>(rgb[0]), static_cast<float>(rgb[1]), static_cast<float>(rgb[2]) }/255.0f;
 				q.data.depth = static_cast<float>(idepth) * DEPTH_TO_Z;
 				q.data.world = (idepth == 0) ? Eigen::Vector3f::Zero() : Backproject(q.position, cam_center, q.data.depth);
-			}
-		}
-
-		for(unsigned y=0, i=0; y<height; y++) {
-			for(unsigned x=0; x<width; x++, i++) {
-				Pixel<PixelRgbd>& q = img_data(x,y);
 				Eigen::Vector2f gradient = LocalDepthGradient(img_d, x, y, 0.1f*RADIUS, FOCAL_PX, DEPTH_TO_Z);
 				q.density = Density(q.data.depth, gradient);
 				q.data.normal = NormalFromGradient(gradient, q.data.world);
