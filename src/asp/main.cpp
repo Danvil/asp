@@ -34,36 +34,13 @@ int main(int argc, char** argv)
 
 	// {
 	// 	auto sp = asp::SLIC(img_input);
-
-	// 	slimage::Image3ub img_asp = asp::Plot(sp)
-	// 		<< asp::PlotDense(
-	// 			[](const asp::Pixel<asp::PixelRgb>& u) {
-	// 				return slimage::Pixel3ub{
-	// 					static_cast<unsigned char>(255.0f*u.data.color[0]),
-	// 					static_cast<unsigned char>(255.0f*u.data.color[1]),
-	// 					static_cast<unsigned char>(255.0f*u.data.color[2])
-	// 				};
-	// 			})
-	// 		<< asp::PlotBorder();
-	// 	slimage::gui::Show("slic", img_asp, 3);
+	// 	slimage::gui::Show("slic", PlotColor(sp));
 	// }
 
 	{
 		slimage::Image1ui16 img_depth = slimage::Load1ui16(p_img_d);
-
 		auto sp = asp::DASP(img_input, img_depth);
-
-		slimage::Image3ub img_dasp = asp::Plot(sp)
-			<< asp::PlotDense(
-				[](const asp::Pixel<asp::PixelRgbd>& u) {
-					return slimage::Pixel3ub{
-						static_cast<unsigned char>(255.0f*u.data.color[0]),
-						static_cast<unsigned char>(255.0f*u.data.color[1]),
-						static_cast<unsigned char>(255.0f*u.data.color[2])
-					};
-				})
-			<< asp::PlotBorder();
-		slimage::GuiShow("dasp", img_dasp);
+		slimage::GuiShow("dasp", PlotColor(sp));
 	}
 
 	slimage::GuiWait();

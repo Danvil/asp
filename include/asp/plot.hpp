@@ -85,4 +85,19 @@ namespace asp
 		color
 	}; }
 
+	template<typename T>
+	slimage::Image3ub PlotColor(const Segmentation<T>& seg)
+	{
+		return Plot(seg)
+			<< PlotDense(
+				[](const Pixel<T>& u) {
+					return slimage::Pixel3ub{
+						static_cast<unsigned char>(255.0f*u.data.color[0]),
+						static_cast<unsigned char>(255.0f*u.data.color[1]),
+						static_cast<unsigned char>(255.0f*u.data.color[2])
+					};
+				})
+			<< PlotBorder();
+	}
+
 }

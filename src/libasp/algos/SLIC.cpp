@@ -12,7 +12,7 @@ namespace asp
 		constexpr float COMPACTNESS = 0.1f;
 
 		float density = static_cast<float>(NUM_SUPERPIXELS) / (img_rgb.width() * img_rgb.height());
-		auto img_data = slimage::Convert(img_rgb,
+		auto img_data = slimage::ConvertUV(img_rgb,
 			[density](unsigned x, unsigned y, const slimage::Pixel3ub& px) {
 				return Pixel<PixelRgb>{
 					1.0f,
