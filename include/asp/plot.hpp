@@ -91,18 +91,17 @@ namespace asp
 	inline unsigned char sf32_to_ui08(float x)
 	{ return static_cast<unsigned char>(255.0f*0.5f*(x + 1.0f)); }
 
+	inline slimage::Pixel3ub uf32_to_ui08(const Eigen::Vector3f& x)
+	{ return slimage::Pixel3ub{uf32_to_ui08(x[0]), uf32_to_ui08(x[1]), uf32_to_ui08(x[2])}; }
+
+	inline slimage::Pixel3ub sf32_to_ui08(const Eigen::Vector3f& x)
+	{ return slimage::Pixel3ub{sf32_to_ui08(x[0]), sf32_to_ui08(x[1]), sf32_to_ui08(x[2])}; }
+
 	template<typename T>
 	slimage::Image3ub PlotColor(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
-			<< PlotDense(
-				[](const Pixel<T>& u) {
-					return slimage::Pixel3ub{
-						uf32_to_ui08(u.data.color[0]),
-						uf32_to_ui08(u.data.color[1]),
-						uf32_to_ui08(u.data.color[2])
-					};
-				})
+			<< PlotDense([](const Pixel<T>& u) { return uf32_to_ui08(u.data.color); })
 			<< PlotBorder();
 	}
 
@@ -110,14 +109,7 @@ namespace asp
 	slimage::Image3ub PlotNormals(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
-			<< PlotDense(
-				[](const Pixel<T>& u) {
-					return slimage::Pixel3ub{
-						sf32_to_ui08(u.data.normal[0]),
-						sf32_to_ui08(u.data.normal[1]),
-						sf32_to_ui08(u.data.normal[2])
-					};
-				})
+			<< PlotDense([](const Pixel<T>& u) { return sf32_to_ui08(u.data.color); })
 			<< PlotBorder();
 	}
 

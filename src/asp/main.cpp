@@ -60,13 +60,7 @@ int main(int argc, char** argv)
 		// visualize superpixels
 		slimage::GuiShow("normals",
 			slimage::Convert(sp.input,
-				[](const asp::Pixel<asp::PixelRgbd>& px) {
-					return slimage::Pixel3ub{
-						asp::sf32_to_ui08(px.data.normal[0]),
-						asp::sf32_to_ui08(px.data.normal[1]),
-						asp::sf32_to_ui08(px.data.normal[2])
-					};
-				}));
+				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::sf32_to_ui08(px.data.normal); }));
 		slimage::GuiShow("dasp", PlotColor(sp));
 		slimage::GuiWait();
 	}
