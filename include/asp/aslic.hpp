@@ -20,12 +20,13 @@ namespace detail
 			std::min<int>(b, std::ceil(x + w))
 		);
 	}
-}
 
-/** Compute superpixel radius from density */
-inline
-float DensityToRadius(float density)
-{ return std::sqrt(1.0f / (density*3.1415f)); } // rho = 1 / (r*r*pi) => r = sqrt(rho/pi)
+	/** Compute superpixel radius from density */
+	inline
+	float DensityToRadius(float density)
+	{ return std::sqrt(1.0f / (density*3.1415f)); } // rho = 1 / (r*r*pi) => r = sqrt(rho/pi)
+
+}
 
 /** Adaptive SLIC superpixel algorithm */
 template<typename T, typename F>
@@ -48,7 +49,7 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 		sp.num = 1.0f;
 		sp.position = seed.position;
 		sp.density = seed.density;
-		sp.radius = DensityToRadius(sp.density);
+		sp.radius = detail::DensityToRadius(sp.density);
 	}
 	s.indices = Image<int>{width, height};
 	s.weights = slimage::Image1f{width, height};
@@ -92,7 +93,7 @@ Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& see
 		for(size_t i=0; i<s.superpixels.size(); i++) {
 			auto& sp = s.superpixels[i];
 			reinterpret_cast<SegmentBase<T>&>(sp) = acc[i].mean();
-			sp.radius = DensityToRadius(sp.density);
+			sp.radius = detail::DensityToRadius(sp.density);
 		}
 	}
 	return s;
