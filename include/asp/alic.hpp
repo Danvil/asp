@@ -1,7 +1,7 @@
 #pragma once
 
 #include <asp/pds.hpp>
-#include <asp/Segmentation.hpp>
+#include <asp/segmentation.hpp>
 #include <vector>
 #include <tuple>
 #include <cmath>

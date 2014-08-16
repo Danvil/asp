@@ -1,6 +1,6 @@
 #pragma once
 
-#include <asp/Segmentation.hpp>
+#include <asp/segmentation.hpp>
 #include <Eigen/Dense>
 #include <vector>
 
