@@ -36,7 +36,6 @@ Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<
 	const unsigned width = input.width();
 	const unsigned height = input.height();
 	// initialize
-	using sp_t = typename Segmentation<T>::sp_t;
 	Segmentation<T> s;
 	s.input = input;
 	s.superpixels.resize(seeds.size());
@@ -59,7 +58,7 @@ Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<
 		std::fill(s.weights.begin(), s.weights.end(), std::numeric_limits<float>::max());
 		// iterate over all superpixels
 		for(size_t sid=0; sid<s.superpixels.size(); sid++) {
-			const sp_t& sp = s.superpixels[sid];
+			const auto& sp = s.superpixels[sid];
 			// compute superpixel bounding box
 			int x1, x2, y1, y2;
 			std::tie(x1,x2) = detail::GetRange(0,  width, sp.position.x(), LAMBDA*sp.radius);

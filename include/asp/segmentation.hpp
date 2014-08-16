@@ -88,9 +88,8 @@ private:
 template<typename T>
 struct Segmentation
 {
-	using sp_t = Superpixel<T>;
 	slimage::Image<Pixel<T>,1> input;
-	std::vector<sp_t> superpixels;
+	std::vector<Superpixel<T>> superpixels;
 	slimage::Image<int,1> indices;
 	slimage::Image<float,1> weights;
 };
