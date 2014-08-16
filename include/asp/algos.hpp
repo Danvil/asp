@@ -65,10 +65,30 @@ namespace asp
 		
 	};
 
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& color);
+	struct SlicParameters
+	{
+		unsigned num_superpixels = 1000;
+		float compactness = 0.15f;
+	};
 
-	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density);
+	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& color, const SlicParameters& opt=SlicParameters());
 
-	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& color, const slimage::Image1ui16& depth);
+	struct AspParameters
+	{
+		float compactness = 0.15f;
+	};
+
+	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt=AspParameters());
+
+	struct DaspParameters
+	{
+		float focal_px = 540.0f;
+		float depth_to_z = 0.001f;
+		float radius = 0.025f;
+		float compactness = 0.4f;
+		float normal_weight = 0.2f;
+	};
+
+	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& color, const slimage::Image1ui16& depth, const DaspParameters& opt=DaspParameters());
 
 }

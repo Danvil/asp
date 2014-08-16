@@ -5,13 +5,9 @@
 namespace asp
 {
 
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb)
+	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb, const SlicParameters& opt)
 	{
-		constexpr unsigned NUM_SUPERPIXELS = 1000;
-		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::Grid;
-		constexpr float COMPACTNESS = 0.1f;
-
-		float density = static_cast<float>(NUM_SUPERPIXELS) / (img_rgb.width() * img_rgb.height());
+		const float density = static_cast<float>(opt.num_superpixels) / (img_rgb.width() * img_rgb.height());
 		auto img_data = slimage::ConvertUV(img_rgb,
 			[density](unsigned x, unsigned y, const slimage::Pixel3ub& px) {
 				return Pixel<PixelRgb>{
@@ -32,8 +28,8 @@ namespace asp
 			});
 
 		auto sp = ASLIC(img_data,
-			ComputeSeeds(PDS_METHOD, img_data),
-			[](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
+			ComputeSeeds(PoissonDiskSamplingMethod::Grid, img_data),
+			[COMPACTNESS=opt.compactness](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
 				return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)
 					+ (1.0f - COMPACTNESS) * (a.data.color - b.data.color).squaredNorm();
 			});

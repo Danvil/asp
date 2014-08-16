@@ -44,9 +44,6 @@ namespace asp
 	Eigen::Vector2f LocalDepthGradient(const slimage::Image1ui16& depth, unsigned int j, unsigned int i, float base_radius_m, float focal_px, float depth_to_z)
 	{
 		uint16_t d00 = depth(j,i);
-		if(d00 == 0) {
-			return Eigen::Vector2f::Zero();
-		}
 
 		float z_over_f = static_cast<float>(d00) * depth_to_z / focal_px;
 		float window = base_radius_m/z_over_f;

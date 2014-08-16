@@ -5,10 +5,9 @@
 namespace asp
 {
 
-	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density)
+	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt)
 	{
 		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::FloydSteinbergExpo;
-		constexpr float COMPACTNESS = 0.1f;
 
 		auto img_data = slimage::ConvertUV(color,
 			[&density](unsigned x, unsigned y, const slimage::Pixel3ub& px) {
@@ -31,7 +30,7 @@ namespace asp
 
 		auto sp = ASLIC(img_data,
 			ComputeSeeds(PDS_METHOD, img_data),
-			[](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
+			[COMPACTNESS=opt.compactness](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
 				return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)
 					+ (1.0f - COMPACTNESS) * (a.data.color - b.data.color).squaredNorm();
 			});
