@@ -5,14 +5,13 @@
 #include <slimage/gui.hpp>
 #include <slimage/algorithm.hpp>
 #include <boost/program_options.hpp>
-#include <boost/format.hpp>
-#include <boost/progress.hpp>
 #include <iostream>
 
 int main(int argc, char** argv)
 {
 	std::string p_fn_color;
 	std::string p_fn_depth;
+	std::string p_fn_density;
 	std::string p_method;
 
 
@@ -22,7 +21,8 @@ int main(int argc, char** argv)
 		("help", "produce help message")
 		("color", po::value(&p_fn_color), "path to input color image")
 		("depth", po::value(&p_fn_depth), "path to input depth image")
-		("method", po::value(&p_method)->default_value("SLIC"), "superpixel method: SLIC, DASP")
+		("density", po::value(&p_fn_density), "path to input density image")
+		("method", po::value(&p_method)->default_value("SLIC"), "superpixel method: SLIC, ASP, DASP")
 	;
 
 	po::variables_map vm;
@@ -36,35 +36,46 @@ int main(int argc, char** argv)
 	if(p_method == "SLIC") {
 		// load data
 		slimage::Image3ub img_color = slimage::Load3ub(p_fn_color);
-		slimage::GuiShow("color", img_color);
+		slimage::GuiShow("pixel color", img_color);
 		// compute superpixels
 		auto sp = asp::SLIC(img_color);
 		// visualize superpixels
-		slimage::GuiShow("slic", VisualizeSuperpixelColor(sp));
+		slimage::GuiShow("SLIC superpixel", VisualizeSuperpixelColor(sp));
 		slimage::GuiWait();
 	}
+
+	else if(p_method == "ASP") {
+		// load data
+		slimage::Image3ub img_color = slimage::Load3ub(p_fn_color);
+		slimage::GuiShow("pixel color", img_color);
+		slimage::Image1ui16 img_density_ui16 = slimage::Load1ui16(p_fn_density);
+		slimage::Image1f img_density = slimage::Convert(img_density_ui16,
+			[](uint16_t v) { return 1.0f / static_cast<float>(v); });
+		slimage::GuiShow("pixel density", slimage::Rescale(img_density));
+		// compute superpixels
+		auto sp = asp::ASP(img_color, img_density);
+		// visualize superpixels
+		slimage::GuiShow("ASP superpixel", VisualizeSuperpixelColor(sp));
+		slimage::GuiWait();
+	}
+
 	else if(p_method == "DASP") {
 		// load data
 		slimage::Image3ub img_color = slimage::Load3ub(p_fn_color);
-		slimage::GuiShow("color", img_color);
+		slimage::GuiShow("pixel color", img_color);
 		slimage::Image1ui16 img_depth = slimage::Load1ui16(p_fn_depth);
-		{
-			slimage::Image1ui16 img_depth_vis = img_depth;
-			for(auto& p : img_depth_vis) {
-				p *= 16;
-			}
-			slimage::GuiShow("depth", img_depth_vis);
-		}
+		slimage::GuiShow("pixel depth", slimage::Rescale(img_depth, 500, 3000));
 		// compute superpixels
 		auto sp = asp::DASP(img_color, img_depth);
 		// visualize superpixels
-		slimage::GuiShow("normals",
+		slimage::GuiShow("pixel normals",
 			slimage::Convert(sp.input,
 				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::sf32_to_ui08(px.data.normal); }));
-		slimage::GuiShow("dasp (color)", VisualizeSuperpixelColor(sp));
-		slimage::GuiShow("dasp (normal)", VisualizeSuperpixelNormal(sp));
+		slimage::GuiShow("DASP superpixel (color)", VisualizeSuperpixelColor(sp));
+		slimage::GuiShow("DASP superpixel (normal)", VisualizeSuperpixelNormal(sp));
 		slimage::GuiWait();
 	}
+	
 	else {
 		std::cerr << "Unknown method. Use --h for help." << std::endl;
 		return 1;

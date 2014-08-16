@@ -65,8 +65,10 @@ namespace asp
 		
 	};
 
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb);
+	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& color);
 
-	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& img_rgb, const slimage::Image1ui16& img_d);
+	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density);
+
+	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& color, const slimage::Image1ui16& depth);
 
 }
