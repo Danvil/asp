@@ -3,8 +3,8 @@
 Adaptive Superpixels is a collection of superpixel algorithms for non-constant density functions.
 
 **Algorithms:**
- * Depth-Adaptive Superpixels for RGB-D images
  * Adaptive Superpixels for color images with a user-defined density function
+ * Depth-Adaptive Superpixels for RGB-D images
  * SLIC for color images -- see [ivrg.epfl.ch/research/superpixels](http://ivrg.epfl.ch/research/superpixels)
 
 ## Examples
