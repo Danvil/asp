@@ -1,5 +1,4 @@
 add_library(libasp SHARED
-	asp.cpp
 	algos/ASP.cpp
 	algos/DASP.cpp
 	algos/SLIC.cpp
