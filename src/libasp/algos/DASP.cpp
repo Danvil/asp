@@ -32,7 +32,7 @@ namespace asp
 		const unsigned height = img_d.height();
 		const Eigen::Vector2f cam_center = 0.5f * Eigen::Vector2f{ static_cast<float>(width), static_cast<float>(height) };
 
-		Image<Pixel<PixelRgbd>> img_data{width, height};
+		slimage::Image<Pixel<PixelRgbd>,1> img_data{width, height};
 		for(unsigned y=0, i=0; y<height; y++) {
 			for(unsigned x=0; x<width; x++, i++) {
 				const auto& rgb = img_rgb(x,y);

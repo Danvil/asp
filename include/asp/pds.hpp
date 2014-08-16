@@ -1,6 +1,5 @@
 #pragma once
 
-#include <asp/Image.hpp>
 #include <asp/Segmentation.hpp>
 #include <Eigen/Dense>
 #include <vector>
@@ -26,7 +25,7 @@ struct Seed
 
 /** Compute seeds accordingly to pixel density values */
 template<typename T>
-std::vector<Seed> ComputeSeeds(PoissonDiskSamplingMethod method, const Image<Pixel<T>>& input)
+std::vector<Seed> ComputeSeeds(PoissonDiskSamplingMethod method, const slimage::Image<Pixel<T>,1>& input)
 {
 	const unsigned width = input.width();
 	const unsigned height = input.height();

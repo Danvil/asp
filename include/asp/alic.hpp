@@ -2,7 +2,6 @@
 
 #include <asp/pds.hpp>
 #include <asp/Segmentation.hpp>
-#include <asp/Image.hpp>
 #include <vector>
 #include <tuple>
 #include <cmath>
@@ -30,7 +29,7 @@ namespace detail
 
 /** Adaptive SLIC superpixel algorithm */
 template<typename T, typename F>
-Segmentation<T> ALIC(const Image<Pixel<T>>& input, const std::vector<Seed>& seeds, F dist)
+Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<Seed>& seeds, F dist)
 {
 	constexpr unsigned ITERATIONS = 5;
 	constexpr float LAMBDA = 3.0f;
@@ -51,7 +50,7 @@ Segmentation<T> ALIC(const Image<Pixel<T>>& input, const std::vector<Seed>& seed
 		sp.density = seed.density;
 		sp.radius = detail::DensityToRadius(sp.density);
 	}
-	s.indices = Image<int>{width, height};
+	s.indices = slimage::Image<int,1>{width, height};
 	s.weights = slimage::Image1f{width, height};
 	// iterate
 	for(unsigned k=0; k<ITERATIONS; k++) {

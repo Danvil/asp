@@ -1,6 +1,6 @@
 #pragma once
 
-#include <asp/Image.hpp>
+#include <slimage/image.hpp>
 #include <Eigen/Dense>
 #include <vector>
 
@@ -89,10 +89,10 @@ template<typename T>
 struct Segmentation
 {
 	using sp_t = Superpixel<T>;
-	Image<Pixel<T>> input;
+	slimage::Image<Pixel<T>,1> input;
 	std::vector<sp_t> superpixels;
-	Image<int> indices;
-	Image<float> weights;
+	slimage::Image<int,1> indices;
+	slimage::Image<float,1> weights;
 };
 
 }
