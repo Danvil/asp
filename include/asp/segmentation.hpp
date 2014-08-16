@@ -6,7 +6,7 @@
 
 namespace asp {
 
-/** A base segment in the hierarchy (pixel, superpixel, segment) */
+/** Base type for segment in the hierarchy (pixel, superpixel, segment) */
 template<typename T>
 struct SegmentBase
 {
@@ -45,10 +45,11 @@ struct SegmentBase
 	
 };
 
+/** Type of pixels */
 template<typename T>
 using Pixel = SegmentBase<T>;
 
-/** Individual superpixel */
+/** Type of superpixels */
 template<typename T>
 struct Superpixel
 : public SegmentBase<T>
@@ -56,41 +57,20 @@ struct Superpixel
 	float radius;
 };
 
-/** Accumulate pixels */
-template<typename T>
-struct SegmentAccumulator
-{
-	SegmentAccumulator()
-	:	sum_(SegmentBase<T>::Zero())
-	{}
-
-	void add(const SegmentBase<T>& v)
-	{ sum_ += v; }
-
-	bool empty() const
-	{ return sum_.num == 0.0f; }
-
-	SegmentBase<T> mean() const
-	{
-		if(empty()) {
-			return sum_;
-		}
-		auto seg = (1.0f / static_cast<float>(sum_.num)) * sum_;
-		seg.num = sum_.num; // preserve accumulated number
-		return seg;
-	}
-
-private:
-	SegmentBase<T> sum_;
-};
-
 /** Superpixel segmentation */
 template<typename T>
 struct Segmentation
 {
+	// original pixel data used for superpixel computation
 	slimage::Image<Pixel<T>,1> input;
+	
+	// list of superpixels
 	std::vector<Superpixel<T>> superpixels;
+	
+	// superpixel index for each pixel (can be used as an index into 'superpixels', -1 for no assignment)
 	slimage::Image<int,1> indices;
+
+	// pixel-superpixel distance for each pixel
 	slimage::Image<float,1> weights;
 };
 

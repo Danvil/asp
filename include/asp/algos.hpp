@@ -30,7 +30,7 @@ namespace asp
 		
 	};
 
-	/** RGB pixel data */
+	/** RGB-D pixel data (including 3D position and 3D normal) */
 	struct PixelRgbd
 	{
 		Eigen::Vector3f color;
@@ -65,21 +65,26 @@ namespace asp
 		
 	};
 
+	/** Parameters for the SLIC algorithm */
 	struct SlicParameters
 	{
 		unsigned num_superpixels = 1000;
 		float compactness = 0.15f;
 	};
 
+	/** Simple Iterative Clustering superpixel algorithm for color images */
 	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& color, const SlicParameters& opt=SlicParameters());
 
+	/** Parameters for the ASP algorithm */
 	struct AspParameters
 	{
 		float compactness = 0.15f;
 	};
 
+	/** Adaptive Superpixels algorithm for color images with a user defined density function */
 	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt=AspParameters());
 
+	/** Parameters for the DASP algorithm */
 	struct DaspParameters
 	{
 		float focal_px = 540.0f;
@@ -89,6 +94,7 @@ namespace asp
 		float normal_weight = 0.2f;
 	};
 
+	/** Depth-Adaptive Superpixels for RGB-D images */
 	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& color, const slimage::Image1ui16& depth, const DaspParameters& opt=DaspParameters());
 
 }

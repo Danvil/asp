@@ -25,9 +25,38 @@ namespace detail
 	float DensityToRadius(float density)
 	{ return std::sqrt(1.0f / (density*3.1415f)); } // rho = 1 / (r*r*pi) => r = sqrt(rho/pi)
 
+	/** Accumulate pixel data into superpixels */
+	template<typename T>
+	struct SegmentAccumulator
+	{
+		SegmentAccumulator()
+		:	sum_(SegmentBase<T>::Zero())
+		{}
+
+		void add(const SegmentBase<T>& v)
+		{ sum_ += v; }
+
+		bool empty() const
+		{ return sum_.num == 0.0f; }
+
+		SegmentBase<T> mean() const
+		{
+			if(empty()) {
+				return sum_;
+			}
+			auto seg = (1.0f / static_cast<float>(sum_.num)) * sum_;
+			seg.num = sum_.num; // preserve accumulated number
+			return seg;
+		}
+
+	private:
+		SegmentBase<T> sum_;
+	};
+
 }
 
-/** Adaptive SLIC superpixel algorithm */
+
+/** Adaptive Local Iterative Clustering superpixel algorithm */
 template<typename T, typename F>
 Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<Seed>& seeds, F dist)
 {
@@ -79,7 +108,7 @@ Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<
 			}
 		}
 		// update superpixels
-		std::vector<SegmentAccumulator<T>> acc(s.superpixels.size(), SegmentAccumulator<T>{});
+		std::vector<detail::SegmentAccumulator<T>> acc(s.superpixels.size(), detail::SegmentAccumulator<T>{});
 		for(unsigned y=0; y<s.indices.height(); y++) {
 			for(unsigned x=0; x<s.indices.width(); x++) {
 				int sid = s.indices(x,y);
