@@ -8,7 +8,7 @@ namespace asp
 	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb)
 	{
 		constexpr unsigned NUM_SUPERPIXELS = 1000;
-		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::FloydSteinbergExpo;
+		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::Grid;
 		constexpr float COMPACTNESS = 0.1f;
 
 		float density = static_cast<float>(NUM_SUPERPIXELS) / (img_rgb.width() * img_rgb.height());

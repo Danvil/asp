@@ -4,6 +4,7 @@ add_library(libasp SHARED
 	algos/DASP.cpp
 	algos/SLIC.cpp
 	pds/pds.cpp
+	pds/Grid.cpp
 	pds/FloydSteinberg.cpp
 )
 

@@ -9,6 +9,8 @@ namespace asp {
 
 enum class PoissonDiskSamplingMethod
 {
+	Random,
+	Grid,
 	FloydSteinberg,
 	FloydSteinbergExpo
 };

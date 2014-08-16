@@ -4,7 +4,7 @@
 namespace asp
 {
 
-std::vector<Eigen::Vector2f> FloydSteinberg(const Eigen::MatrixXf& density_inp)
+std::vector<Eigen::Vector2f> PdsFloydSteinberg(const Eigen::MatrixXf& density_inp)
 {
 	Eigen::MatrixXf density = density_inp;
 	std::vector<Eigen::Vector2f> seeds;
@@ -32,7 +32,7 @@ std::vector<Eigen::Vector2f> FloydSteinberg(const Eigen::MatrixXf& density_inp)
 }
 
 // Variante von Floyd-Steinberg. Vorteil: Keine Schlangenlinien in dünn besetzten Bereichen.
-std::vector<Eigen::Vector2f> FloydSteinbergExpo(const Eigen::MatrixXf& density)
+std::vector<Eigen::Vector2f> PdsFloydSteinbergExpo(const Eigen::MatrixXf& density)
 {
 	// Fehler der nächsten 8 Zeilen in Ringpuffer speichern
 	Eigen::MatrixXf ringbuffer( 16 + density.rows(), 8 );

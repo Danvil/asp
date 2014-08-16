@@ -48,9 +48,12 @@ int main(int argc, char** argv)
 		// load data
 		slimage::Image3ub img_color = slimage::Load3ub(p_fn_color);
 		slimage::GuiShow("pixel color", img_color);
-		slimage::Image1ui16 img_density_ui16 = slimage::Load1ui16(p_fn_density);
-		slimage::Image1f img_density = slimage::Convert(img_density_ui16,
-			[](uint16_t v) { return 1.0f / static_cast<float>(v); });
+		slimage::Image1f img_density =
+			p_fn_density.empty()
+			? slimage::Image1f{img_color.dimensions(),
+				1000.0f / static_cast<float>(img_color.width()*img_color.height())}
+			: slimage::Convert(slimage::Load1ui16(p_fn_density),
+				[](uint16_t v) { return 1.0f / static_cast<float>(v); });
 		slimage::GuiShow("pixel density", slimage::Rescale(img_density));
 		// compute superpixels
 		auto sp = asp::ASP(img_color, img_density);
