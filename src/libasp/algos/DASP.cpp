@@ -1,6 +1,6 @@
 #include "gradient.hpp"
 #include <asp/algos.hpp>
-#include <asp/aslic.hpp>
+#include <asp/alic.hpp>
 #include <iostream>
 
 namespace asp
@@ -61,7 +61,7 @@ namespace asp
 			}
 		}
 
-		auto sp = ASLIC(img_data,
+		auto sp = ALIC(img_data,
 			ComputeSeeds(PDS_METHOD, img_data),
 			[COMPACTNESS=opt.compactness, NORMAL_WEIGHT=opt.normal_weight, RADIUS_SCL=1.0f/(opt.radius*opt.radius)]
 			(const asp::Superpixel<PixelRgbd>& a, const Pixel<PixelRgbd>& b) {

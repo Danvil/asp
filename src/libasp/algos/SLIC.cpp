@@ -1,6 +1,6 @@
 #include <slimage/algorithm.hpp>
 #include <asp/algos.hpp>
-#include <asp/aslic.hpp>
+#include <asp/alic.hpp>
 
 namespace asp
 {
@@ -27,7 +27,7 @@ namespace asp
 				};
 			});
 
-		auto sp = ASLIC(img_data,
+		auto sp = ALIC(img_data,
 			ComputeSeeds(PoissonDiskSamplingMethod::Grid, img_data),
 			[COMPACTNESS=opt.compactness](const Superpixel<PixelRgb>& a, const Pixel<PixelRgb>& b) {
 				return COMPACTNESS * (a.position - b.position).squaredNorm() / (a.radius * a.radius)

@@ -30,7 +30,7 @@ namespace detail
 
 /** Adaptive SLIC superpixel algorithm */
 template<typename T, typename F>
-Segmentation<T> ASLIC(const Image<Pixel<T>>& input, const std::vector<Seed>& seeds, F dist)
+Segmentation<T> ALIC(const Image<Pixel<T>>& input, const std::vector<Seed>& seeds, F dist)
 {
 	constexpr unsigned ITERATIONS = 5;
 	constexpr float LAMBDA = 3.0f;
