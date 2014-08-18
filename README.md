@@ -1,5 +1,7 @@
 # Adaptive Superpixels
 
+*Copyright 2012-2014 by David Weikersdorfer*
+
 Adaptive Superpixels is a collection of superpixel algorithms for non-constant density functions.
 
 **Algorithms:**
