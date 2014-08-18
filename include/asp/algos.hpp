@@ -17,17 +17,18 @@ namespace asp
 			Eigen::Vector3f::Zero()
 		}; }
 
-		PixelRgb& operator+=(const PixelRgb& x)
+		using accumulate_t = PixelRgb;
+
+		void accumulate(const PixelRgb& v)
 		{
-			color += x.color;
-			return *this;
+			color += v.color;
 		}
 
-		friend PixelRgb operator*(float s, const PixelRgb& x)
-		{ return {
-			s * x.color
-		}; }
-		
+		void normalize(float weight)
+		{
+			color /= weight;
+		}
+
 	};
 
 	/** RGB-D pixel data (including 3D position and 3D normal) */
@@ -46,23 +47,24 @@ namespace asp
 			Eigen::Vector3f::Zero()
 		}; }
 
-		PixelRgbd& operator+=(const PixelRgbd& x)
+		using accumulate_t = PixelRgbd;
+
+		void accumulate(const PixelRgbd& v)
 		{
-			color += x.color;
-			depth += x.depth;
-			world += x.world;
-			normal += x.normal;
-			return *this;
+			color += v.color;
+			depth += v.depth;
+			world += v.world;
+			normal += v.normal; // FIXME compute normal mean correctly
 		}
 
-		friend PixelRgbd operator*(float s, const PixelRgbd& x)
-		{ return {
-			s * x.color,
-			s * x.depth,
-			s * x.world,
-			s * x.normal
-		}; }
-		
+		void normalize(float weight)
+		{
+			color /= weight;
+			depth /= weight;
+			world /= weight;
+			normal.normalize(); // FIXME compute normal mean correctly
+		}
+
 	};
 
 	/** Parameters for the SLIC algorithm */

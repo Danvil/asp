@@ -27,23 +27,24 @@ struct SegmentBase
 		T::Zero()
 	}; }
 
-	SegmentBase& operator+=(const SegmentBase& x)
+	using accumulate_t = SegmentBase<typename T::accumulate_t>;
+
+	void accumulate(const SegmentBase& v)
 	{
-		num += x.num;
-		position += x.num * x.position;
-		density += x.num * x.density;
-		data += x.num * x.data;
-		return *this;
+		num += v.num;
+		position += v.num * v.position;
+		density += v.num * v.density;
+		data.accumulate(v.data);
 	}
 
-	friend SegmentBase operator*(float s, const SegmentBase& x)
-	{ return {
-		s * x.num,
-		s * x.position,
-		s * x.density,
-		s * x.data
-	}; }
-	
+	void normalize(float weight)
+	{
+		num /= weight;
+		position /= weight;
+		density /= weight;
+		data.normalize(weight);
+	}
+
 };
 
 /** Type of pixels */

@@ -30,12 +30,14 @@ namespace detail
 	template<typename T>
 	struct SegmentAccumulator
 	{
+		using acc_t = typename SegmentBase<T>::accumulate_t;
+
 		SegmentAccumulator()
-		:	sum_(SegmentBase<T>::Zero())
+		:	sum_(acc_t::Zero())
 		{}
 
 		void add(const SegmentBase<T>& v)
-		{ sum_ += v; }
+		{ sum_.accumulate(v); }
 
 		bool empty() const
 		{ return sum_.num == 0.0f; }
@@ -45,13 +47,14 @@ namespace detail
 			if(empty()) {
 				return sum_;
 			}
-			auto seg = (1.0f / static_cast<float>(sum_.num)) * sum_;
-			seg.num = sum_.num; // preserve accumulated number
+			auto seg = sum_;
+			seg.normalize(sum_.num);
+			seg.num = sum_.num; // preserve accumulated weight
 			return seg;
 		}
 
 	private:
-		SegmentBase<T> sum_;
+		acc_t sum_;
 	};
 
 }
