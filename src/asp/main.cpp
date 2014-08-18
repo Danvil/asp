@@ -69,10 +69,10 @@ int main(int argc, char** argv)
 		auto sp = asp::SuperpixelsAsp(img_color, img_density);
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
-		auto vis_sp_color = VisualizeSuperpixelColor(sp);
-		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("pixel density", vis_px_density);
+		auto vis_sp_color = VisualizeSuperpixelColor(sp);
 		slimage::GuiShow("ASP superpixel", vis_sp_color);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("ASP superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
@@ -96,15 +96,15 @@ int main(int argc, char** argv)
 		auto sp = asp::SuperpixelsDasp(img_color, img_depth);
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
+		slimage::GuiShow("pixel density", vis_px_density);
 		auto vis_px_normals = slimage::Convert(sp.input,
 				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::detail::sf32_to_ui08(px.data.normal); });
-		auto vis_sp_color = VisualizeSuperpixelColor(sp);
-		auto vis_sp_normals = VisualizeSuperpixelNormal(sp);
-		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
-		slimage::GuiShow("pixel density", vis_px_density);
 		slimage::GuiShow("pixel normals", vis_px_normals);
+		auto vis_sp_color = VisualizeSuperpixelColor(sp);
 		slimage::GuiShow("DASP superpixel (color)", vis_sp_color);
+		auto vis_sp_normals = VisualizeSuperpixelNormal(sp);
 		slimage::GuiShow("DASP superpixel (normal)", vis_sp_normals);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("DASP superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
