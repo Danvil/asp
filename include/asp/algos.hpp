@@ -68,7 +68,10 @@ namespace asp
 	/** Parameters for the SLIC algorithm */
 	struct SlicParameters
 	{
+		// number of superpixels
 		unsigned num_superpixels = 1000;
+
+		// tradeoff between compact superpixels (compactness=1) and boundary recall (compactness=0)
 		float compactness = 0.15f;
 	};
 
@@ -78,6 +81,7 @@ namespace asp
 	/** Parameters for the ASP algorithm */
 	struct AspParameters
 	{
+		// tradeoff between compact superpixels (compactness=1) and boundary recall (compactness=0)
 		float compactness = 0.15f;
 	};
 
@@ -87,14 +91,22 @@ namespace asp
 	/** Parameters for the DASP algorithm */
 	struct DaspParameters
 	{
+		// focal length in pixel of the camera (used to compute correct 3D points)
 		float focal_px = 540.0f;
+
+		// factor for converting Primesense depth values to meters 
 		float depth_to_z = 0.001f;
+
+		// 3D radius of superpixels in meters
 		float radius = 0.025f;
+
+		// tradeoff between 3D compact superpixels (compactness=1) and boundary recall (compactness=0)
 		float compactness = 0.4f;
+
+		// tradeoff between using color (normal_weight=0) and normals (normal_weight=1) as data term in the distance function
 		float normal_weight = 0.2f;
 	};
 
 	/** Depth-Adaptive Superpixels for RGB-D images */
 	Segmentation<PixelRgbd> SuperpixelsDasp(const slimage::Image3ub& color, const slimage::Image1ui16& depth, const DaspParameters& opt=DaspParameters());
-
 }
