@@ -5,7 +5,7 @@
 namespace asp
 {
 
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& img_rgb, const SlicParameters& opt)
+	Segmentation<PixelRgb> SuperpixelsSlic(const slimage::Image3ub& img_rgb, const SlicParameters& opt)
 	{
 		const float density = static_cast<float>(opt.num_superpixels) / (img_rgb.width() * img_rgb.height());
 		auto img_data = slimage::ConvertUV(img_rgb,

@@ -128,7 +128,7 @@ namespace asp
 		return 1.0f - a.dot(b);
 	}
 
-	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& img_rgb, const slimage::Image1ui16& img_d, const DaspParameters& opt_in)
+	Segmentation<PixelRgbd> SuperpixelsDasp(const slimage::Image3ub& img_rgb, const slimage::Image1ui16& img_d, const DaspParameters& opt_in)
 	{
 		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::FloydSteinbergExpo;
 		const DaspParameters opt = opt_in; // use local copy for higher performance

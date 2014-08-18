@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		slimage::Image3ub img_color = slimage::Load3ub(p_fn_color);
 		slimage::GuiShow("pixel color", img_color);
 		// compute superpixels
-		auto sp = asp::SLIC(img_color);
+		auto sp = asp::SuperpixelsSlic(img_color);
 		// visualize superpixels
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
 		slimage::GuiShow("SLIC superpixel", vis_sp_color);
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 			: slimage::Convert(slimage::Load1ui16(p_fn_density),
 				[](uint16_t v) { return 1.0f / static_cast<float>(v); });
 		// compute superpixels
-		auto sp = asp::ASP(img_color, img_density);
+		auto sp = asp::SuperpixelsAsp(img_color, img_density);
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 				[](float v) { return asp::uf32_to_ui08(v); });
 		slimage::GuiShow("pixel depth", vis_px_depth);
 		// compute superpixels
-		auto sp = asp::DASP(img_color, img_depth);
+		auto sp = asp::SuperpixelsDasp(img_color, img_depth);
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
 		auto vis_px_normals = slimage::Convert(sp.input,

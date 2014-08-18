@@ -73,7 +73,7 @@ namespace asp
 	};
 
 	/** Simple Iterative Clustering superpixel algorithm for color images */
-	Segmentation<PixelRgb> SLIC(const slimage::Image3ub& color, const SlicParameters& opt=SlicParameters());
+	Segmentation<PixelRgb> SuperpixelsSlic(const slimage::Image3ub& color, const SlicParameters& opt=SlicParameters());
 
 	/** Parameters for the ASP algorithm */
 	struct AspParameters
@@ -82,7 +82,7 @@ namespace asp
 	};
 
 	/** Adaptive Superpixels algorithm for color images with a user defined density function */
-	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt=AspParameters());
+	Segmentation<PixelRgb> SuperpixelsAsp(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt=AspParameters());
 
 	/** Parameters for the DASP algorithm */
 	struct DaspParameters
@@ -95,6 +95,6 @@ namespace asp
 	};
 
 	/** Depth-Adaptive Superpixels for RGB-D images */
-	Segmentation<PixelRgbd> DASP(const slimage::Image3ub& color, const slimage::Image1ui16& depth, const DaspParameters& opt=DaspParameters());
+	Segmentation<PixelRgbd> SuperpixelsDasp(const slimage::Image3ub& color, const slimage::Image1ui16& depth, const DaspParameters& opt=DaspParameters());
 
 }

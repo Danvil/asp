@@ -5,7 +5,7 @@
 namespace asp
 {
 
-	Segmentation<PixelRgb> ASP(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt)
+	Segmentation<PixelRgb> SuperpixelsAsp(const slimage::Image3ub& color, const slimage::Image1f& density, const AspParameters& opt)
 	{
 		constexpr PoissonDiskSamplingMethod PDS_METHOD = PoissonDiskSamplingMethod::FloydSteinbergExpo;
 
