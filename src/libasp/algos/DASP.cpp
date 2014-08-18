@@ -165,6 +165,20 @@ namespace asp
 			}
 		}
 
+		if(opt.num_superpixels > 0) {
+			// compute current total density = number of superpixels
+			float total_density = 0.0f;
+			for(const auto& q : img_data) {
+				total_density += q.density;
+			}
+			// compute density scale factor
+			float density_scale_factor = static_cast<float>(opt.num_superpixels) / total_density;
+			// scale density
+			for(auto& q : img_data) {
+				q.density *= density_scale_factor;
+			}
+		}
+
 		auto sp = ALIC(img_data,
 			ComputeSeeds(PDS_METHOD, img_data),
 			[COMPACTNESS=opt.compactness, NORMAL_WEIGHT=opt.normal_weight, RADIUS_SCL=1.0f/(opt.radius*opt.radius)]

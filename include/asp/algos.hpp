@@ -100,6 +100,9 @@ namespace asp
 		// 3D radius of superpixels in meters
 		float radius = 0.025f;
 
+		// if num_superpixels is greater 0, superpixel density is scaled by a constant factor to give the desired number of superpixels
+		unsigned num_superpixels = 0;
+
 		// tradeoff between 3D compact superpixels (compactness=1) and boundary recall (compactness=0)
 		float compactness = 0.4f;
 
