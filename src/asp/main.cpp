@@ -43,12 +43,15 @@ int main(int argc, char** argv)
 		auto sp = asp::SuperpixelsSlic(img_color);
 		// visualize superpixels
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("SLIC superpixel", vis_sp_color);
+		slimage::GuiShow("SLIC superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
 		if(!p_output.empty()) {
 			slimage::Save(p_output + "color.png", img_color);
 			slimage::Save(p_output + "slic.png", vis_sp_color);
+			slimage::Save(p_output + "slic_graph.png", vis_sp_graph);
 		}
 	}
 
@@ -67,14 +70,17 @@ int main(int argc, char** argv)
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("pixel density", vis_px_density);
 		slimage::GuiShow("ASP superpixel", vis_sp_color);
+		slimage::GuiShow("ASP superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
 		if(!p_output.empty()) {
 			slimage::Save(p_output + "color.png", img_color);
 			slimage::Save(p_output + "density.png", vis_px_density);
 			slimage::Save(p_output + "asp.png", vis_sp_color);
+			slimage::Save(p_output + "asp_graph.png", vis_sp_graph);
 		}
 	}
 
@@ -84,20 +90,22 @@ int main(int argc, char** argv)
 		slimage::GuiShow("pixel color", img_color);
 		slimage::Image1ui16 img_depth = slimage::Load1ui16(p_fn_depth);
 		auto vis_px_depth = slimage::Convert(slimage::Rescale(img_depth, 500, 3000),
-				[](float v) { return asp::uf32_to_ui08(v); });
+				[](float v) { return asp::detail::uf32_to_ui08(v); });
 		slimage::GuiShow("pixel depth", vis_px_depth);
 		// compute superpixels
 		auto sp = asp::SuperpixelsDasp(img_color, img_depth);
 		// visualize superpixels
 		auto vis_px_density = VisualizePixelDensity(sp);
 		auto vis_px_normals = slimage::Convert(sp.input,
-				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::sf32_to_ui08(px.data.normal); });
+				[](const asp::Pixel<asp::PixelRgbd>& px) { return asp::detail::sf32_to_ui08(px.data.normal); });
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
 		auto vis_sp_normals = VisualizeSuperpixelNormal(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("pixel density", vis_px_density);
 		slimage::GuiShow("pixel normals", vis_px_normals);
 		slimage::GuiShow("DASP superpixel (color)", vis_sp_color);
 		slimage::GuiShow("DASP superpixel (normal)", vis_sp_normals);
+		slimage::GuiShow("DASP superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
 		if(!p_output.empty()) {
@@ -107,6 +115,7 @@ int main(int argc, char** argv)
 			slimage::Save(p_output + "normals.png", vis_px_normals);
 			slimage::Save(p_output + "dasp.png", vis_sp_color);
 			slimage::Save(p_output + "dasp_normals.png", vis_sp_normals);
+			slimage::Save(p_output + "dasp_graph.png", vis_sp_graph);
 		}
 	}
 	

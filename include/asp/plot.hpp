@@ -1,12 +1,26 @@
 #pragma once
 
 #include <asp/segmentation.hpp>
+#include <asp/graph.hpp>
 #include <slimage/image.hpp>
+#include <slimage/algorithm.hpp>
 
 namespace asp
 {
 	namespace detail
 	{
+		inline unsigned char uf32_to_ui08(float x)
+		{ return static_cast<unsigned char>(255.0f*x); }
+
+		inline unsigned char sf32_to_ui08(float x)
+		{ return static_cast<unsigned char>(255.0f*0.5f*(x + 1.0f)); }
+
+		inline slimage::Pixel3ub uf32_to_ui08(const Eigen::Vector3f& x)
+		{ return slimage::Pixel3ub{uf32_to_ui08(x[0]), uf32_to_ui08(x[1]), uf32_to_ui08(x[2])}; }
+
+		inline slimage::Pixel3ub sf32_to_ui08(const Eigen::Vector3f& x)
+		{ return slimage::Pixel3ub{sf32_to_ui08(x[0]), sf32_to_ui08(x[1]), sf32_to_ui08(x[2])}; }
+
 		template<typename T>
 		struct PlotHelperInit
 		{
@@ -81,6 +95,30 @@ namespace asp
 			}
 			return p;
 		}
+
+		struct PlotHelperGraph
+		{
+			slimage::Pixel3ub color;
+		};
+
+		template<typename T>
+		PlotHelperInit<T> operator<<(PlotHelperInit<T>&& p, const PlotHelperGraph& u)
+		{
+			// plot edges
+			for(const auto& eid : detail::as_range(boost::edges(p.seg.graph))) {
+				const auto& p1 = p.seg.superpixels[boost::source(eid, p.seg.graph)].position;
+				const auto& p2 = p.seg.superpixels[boost::target(eid, p.seg.graph)].position;
+				slimage::PaintLine(p.vis, p1[0], p1[1], p2[0], p2[1], u.color);
+			}
+			// plot superpixels
+			for(const auto& vid : detail::as_range(boost::vertices(p.seg.graph))) {
+				const auto& s = p.seg.superpixels[vid];
+				float r = 0.5f * s.radius;
+				slimage::FillBox(p.vis, s.position[0]-r, s.position[1]-r, 2.0f*r, 2.0f*r, uf32_to_ui08(s.data.color));
+			}
+			return p;
+		}
+		
 	}
 
 	template<typename T>
@@ -106,17 +144,11 @@ namespace asp
 		color
 	}; }
 
-	inline unsigned char uf32_to_ui08(float x)
-	{ return static_cast<unsigned char>(255.0f*x); }
-
-	inline unsigned char sf32_to_ui08(float x)
-	{ return static_cast<unsigned char>(255.0f*0.5f*(x + 1.0f)); }
-
-	inline slimage::Pixel3ub uf32_to_ui08(const Eigen::Vector3f& x)
-	{ return slimage::Pixel3ub{uf32_to_ui08(x[0]), uf32_to_ui08(x[1]), uf32_to_ui08(x[2])}; }
-
-	inline slimage::Pixel3ub sf32_to_ui08(const Eigen::Vector3f& x)
-	{ return slimage::Pixel3ub{sf32_to_ui08(x[0]), sf32_to_ui08(x[1]), sf32_to_ui08(x[2])}; }
+	inline
+	detail::PlotHelperGraph PlotGraph(const slimage::Pixel3ub& color = slimage::Pixel3ub{255,255,255})
+	{ return {
+		color
+	}; }
 
 	template<typename T>
 	slimage::Image3ub VisualizePixelDensity(const Segmentation<T>& seg)
@@ -135,7 +167,7 @@ namespace asp
 	slimage::Image3ub VisualizeSuperpixelColor(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
-			<< PlotSuperpixels([](const Pixel<T>& u) { return uf32_to_ui08(u.data.color); })
+			<< PlotSuperpixels([](const Pixel<T>& u) { return detail::uf32_to_ui08(u.data.color); })
 			<< PlotBorder();
 	}
 
@@ -143,8 +175,14 @@ namespace asp
 	slimage::Image3ub VisualizeSuperpixelNormal(const Segmentation<T>& seg)
 	{
 		return Plot(seg)
-			<< PlotSuperpixels([](const Pixel<T>& u) { return sf32_to_ui08(u.data.normal); })
+			<< PlotSuperpixels([](const Pixel<T>& u) { return detail::sf32_to_ui08(u.data.normal); })
 			<< PlotBorder();
+	}
+
+	template<typename T>
+	slimage::Image3ub VisualizeSuperpixelGraph(const Segmentation<T>& seg)
+	{
+		return Plot(seg) << PlotGraph();
 	}
 
 }
