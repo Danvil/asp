@@ -66,10 +66,10 @@ namespace asp
 			const int height = p.vis.height();
 			for(int y=0; y<height; y++) {
 				int ym = std::max(y-1, 0);
-				int yp = std::min(y+1, height);
+				int yp = std::min(y+1, height-1);
 				for(int x=0; x<width; x++) {
 					int xm = std::max(x-1, 0);
-					int xp = std::min(x+1, width);
+					int xp = std::min(x+1, width-1);
 					int i = p.seg.indices(x,y);
 					if(    i != p.seg.indices(xm,y)
 						|| i != p.seg.indices(xp,y)
