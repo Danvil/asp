@@ -1,10 +1,29 @@
 #pragma once
 
 #include <asp/segmentation.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/copy.hpp>
 #include <iostream>
 
 namespace asp
 {
+
+	/** Superpixel connectivity graph */
+	template<typename T>
+	using SegmentBorderGraph =
+		boost::adjacency_list<
+			boost::vecS, boost::vecS, boost::undirectedS,
+			Superpixel<T>, // superpixel
+			std::vector<size_t> // border pixel indices
+		>;
+
+	template<typename T>
+	using SegmentGraph =
+		boost::adjacency_list<
+			boost::vecS, boost::vecS, boost::undirectedS,
+			Superpixel<T>, // superpixel
+			float // edge weight
+		>;
 
 	namespace detail
 	{
@@ -69,26 +88,47 @@ namespace asp
 		}
 	}
 
-	/** Creates a segment neighbourhood graph */
+	/** Creates a segment neighbourhood graph from a segmentation */
 	template<typename T>
-	SegmentGraph<T> CreateSegmentGraph(const Segmentation<T>& seg)
+	SegmentBorderGraph<T> CreateSegmentBorderGraph(const Segmentation<T>& seg)
 	{
-		using graph_t = SegmentGraph<T>;
+		using graph_t = SegmentBorderGraph<T>;
 		// create superpixel graph (one node per superpixel)
 		graph_t ng(seg.superpixels.size());
 		for(const auto& vid : detail::as_range(boost::vertices(ng))) {
-			ng[vid].data = seg.superpixels[vid]; // correctly convert vertex to superpixel id
+			ng[vid] = seg.superpixels[vid]; // TODO correctly convert vertex descriptor to superpixel id
 		}
 		// find borders
 		auto borders = detail::FindBorders(seg.indices);
 		// create edges
 		for(const auto& q : borders) {
-			auto r = boost::add_edge(q.first.a, q.first.b, ng); // FIXME correctly convert superpixel id to vertex descriptor
+			auto r = boost::add_edge(q.first.a, q.first.b, ng); // TODO correctly convert superpixel id to vertex descriptor
 			assert(r.second);
-			ng[r.first].indices = q.second;
-			ng[r.first].weight = 0.0f;
+			ng[r.first] = q.second;
 		}
 		return ng;
+	}
+
+	/** Creates a weighted segment neighbourhood graph */
+	template<typename T, typename F>
+	SegmentGraph<T> CreateSegmentGraph(const SegmentBorderGraph<T>& border_graph, F dist)
+	{
+		using input_graph_t = SegmentBorderGraph<T>;
+		using result_graph_t = SegmentGraph<T>;
+		result_graph_t result;
+		boost::copy_graph(border_graph, result,
+			boost::vertex_copy(
+				[&border_graph,&result,&dist](typename input_graph_t::vertex_descriptor src, typename result_graph_t::vertex_descriptor dst) {
+					result[dst] = border_graph[src];
+				}
+			)
+			.edge_copy(
+				[&border_graph,&result,&dist](typename input_graph_t::edge_descriptor src, typename result_graph_t::edge_descriptor dst) {
+					result[dst] = dist(border_graph[boost::source(src,border_graph)], border_graph[boost::target(src,border_graph)], border_graph[src]);
+				}
+			)
+		);
+		return result;
 	}
 
 }

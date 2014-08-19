@@ -43,8 +43,9 @@ int main(int argc, char** argv)
 		auto sp = asp::SuperpixelsSlic(img_color);
 		// visualize superpixels
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
-		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
 		slimage::GuiShow("SLIC superpixel", vis_sp_color);
+		auto graph = CreateSegmentBorderGraph(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp, graph);
 		slimage::GuiShow("SLIC superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images
@@ -72,9 +73,10 @@ int main(int argc, char** argv)
 		slimage::GuiShow("pixel density", vis_px_density);
 		auto vis_sp_color = VisualizeSuperpixelColor(sp);
 		slimage::GuiShow("ASP superpixel", vis_sp_color);
-		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
+		auto graph = CreateSegmentBorderGraph(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp, graph);
 		slimage::GuiShow("ASP superpixel (graph)", vis_sp_graph);
-		slimage::GuiWait();
+		slimage::GuiWait();		
 		// output of displayed images
 		if(!p_output.empty()) {
 			slimage::Save(p_output + "color.png", img_color);
@@ -104,7 +106,8 @@ int main(int argc, char** argv)
 		slimage::GuiShow("DASP superpixel (color)", vis_sp_color);
 		auto vis_sp_normals = VisualizeSuperpixelNormal(sp);
 		slimage::GuiShow("DASP superpixel (normal)", vis_sp_normals);
-		auto vis_sp_graph = VisualizeSuperpixelGraph(sp);
+		auto graph = CreateSegmentBorderGraph(sp);
+		auto vis_sp_graph = VisualizeSuperpixelGraph(sp, graph);
 		slimage::GuiShow("DASP superpixel (graph)", vis_sp_graph);
 		slimage::GuiWait();
 		// output of displayed images

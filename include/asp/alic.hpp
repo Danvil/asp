@@ -127,8 +127,6 @@ Segmentation<T> ALIC(const slimage::Image<Pixel<T>,1>& input, const std::vector<
 			sp.radius = detail::DensityToRadius(sp.density);
 		}
 	}
-	// compute superpixel graph
-	s.graph = CreateSegmentGraph(s);
 	return s;
 }
 

@@ -96,22 +96,24 @@ namespace asp
 			return p;
 		}
 
+		template<typename T>
 		struct PlotHelperGraph
 		{
+			SegmentBorderGraph<T> graph;
 			slimage::Pixel3ub color;
 		};
 
 		template<typename T>
-		PlotHelperInit<T> operator<<(PlotHelperInit<T>&& p, const PlotHelperGraph& u)
+		PlotHelperInit<T> operator<<(PlotHelperInit<T>&& p, const PlotHelperGraph<T>& u)
 		{
 			// plot edges
-			for(const auto& eid : detail::as_range(boost::edges(p.seg.graph))) {
-				const auto& p1 = p.seg.superpixels[boost::source(eid, p.seg.graph)].position;
-				const auto& p2 = p.seg.superpixels[boost::target(eid, p.seg.graph)].position;
+			for(const auto& eid : detail::as_range(boost::edges(u.graph))) {
+				const auto& p1 = p.seg.superpixels[boost::source(eid, u.graph)].position;
+				const auto& p2 = p.seg.superpixels[boost::target(eid, u.graph)].position;
 				slimage::PaintLine(p.vis, p1[0], p1[1], p2[0], p2[1], u.color);
 			}
 			// plot superpixels
-			for(const auto& vid : detail::as_range(boost::vertices(p.seg.graph))) {
+			for(const auto& vid : detail::as_range(boost::vertices(u.graph))) {
 				const auto& s = p.seg.superpixels[vid];
 				float r = 0.5f * s.radius;
 				slimage::FillBox(p.vis, s.position[0]-r, s.position[1]-r, 2.0f*r, 2.0f*r, uf32_to_ui08(s.data.color));
@@ -144,9 +146,10 @@ namespace asp
 		color
 	}; }
 
-	inline
-	detail::PlotHelperGraph PlotGraph(const slimage::Pixel3ub& color = slimage::Pixel3ub{255,255,255})
+	template<typename T>
+	detail::PlotHelperGraph<T> PlotGraph(const SegmentBorderGraph<T>& graph, const slimage::Pixel3ub& color = slimage::Pixel3ub{255,255,255})
 	{ return {
+		graph,
 		color
 	}; }
 
@@ -180,9 +183,9 @@ namespace asp
 	}
 
 	template<typename T>
-	slimage::Image3ub VisualizeSuperpixelGraph(const Segmentation<T>& seg)
+	slimage::Image3ub VisualizeSuperpixelGraph(const Segmentation<T>& seg, const SegmentBorderGraph<T>& graph)
 	{
-		return Plot(seg) << PlotGraph();
+		return Plot(seg) << PlotGraph(graph);
 	}
 
 }

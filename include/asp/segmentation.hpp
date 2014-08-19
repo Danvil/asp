@@ -1,7 +1,6 @@
 #pragma once
 
 #include <slimage/image.hpp>
-#include <boost/graph/adjacency_list.hpp>
 #include <Eigen/Dense>
 #include <vector>
 
@@ -59,29 +58,6 @@ struct Superpixel
 	float radius;
 };
 
-/** Superpixel graph node */
-template<typename T>
-struct SegmentGraphNode
-{
-	Superpixel<T> data;
-};
-
-/** Superpixel graph edge */
-struct SegmentGraphEdge
-{
-	float weight;
-	std::vector<size_t> indices;
-};
-
-/** Superpixel graph */
-template<typename T>
-using SegmentGraph =
-	boost::adjacency_list<
-		boost::vecS, boost::vecS, boost::undirectedS,
-		SegmentGraphNode<T>, // vertex type
-		SegmentGraphEdge // edge type
-	>;
-
 /** Superpixel segmentation */
 template<typename T>
 struct Segmentation
@@ -92,14 +68,12 @@ struct Segmentation
 	// list of superpixels
 	std::vector<Superpixel<T>> superpixels;
 
-	// superpixel graph
-	SegmentGraph<T> graph;
-	
 	// superpixel index for each pixel (can be used as an index into 'superpixels', -1 for no assignment)
 	slimage::Image<int,1> indices;
 
 	// pixel-superpixel distance for each pixel
 	slimage::Image<float,1> weights;
+	
 };
 
 }
